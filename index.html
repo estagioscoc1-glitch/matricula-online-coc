@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a1428">
+<meta name="description" content="Matrícula Online — Colégio Oswaldo Cruz Educação Profissional. Garanta sua vaga nos cursos técnicos e especializações.">
+<title>Matrícula Online — Colégio Oswaldo Cruz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+
+  <!-- ================= CABEÇALHO ================= -->
+  <header class="brand">
+    <div class="brand-logo" id="logo"><div class="mono">COC</div></div>
+    <div class="brand-name" id="brandName">COLÉGIO OSWALDO CRUZ</div>
+    <div class="brand-sub" id="brandSub">Educação Profissional</div>
+    <div class="brand-rule"></div>
+    <h1 class="page-title"><span>MATRÍCULA ONLINE</span></h1>
+    <p class="page-desc">Preencha o formulário abaixo para garantir sua vaga</p>
+  </header>
+
+  <div id="demoWarn" class="alert alert-warn hidden">
+    <svg viewBox="0 0 24 24"><path d="M12 2 1 21h22L12 2Zm0 6 6.5 11h-13L12 8Zm-1 3v4h2v-4h-2Zm0 5v2h2v-2h-2Z"/></svg>
+    <div><strong>Modo demonstração.</strong> O banco de dados ainda não foi configurado — as matrículas <u>não estão sendo salvas</u>. Abra o arquivo <code>config.js</code> e cole as chaves do Supabase.</div>
+  </div>
+
+  <!-- ================= PROGRESSO ================= -->
+  <nav class="steps" id="steps" aria-label="Etapas da matrícula">
+    <div class="step" data-step="1"><div class="step-dot">1</div><div class="step-label">Dados Pessoais</div></div>
+    <div class="step" data-step="2"><div class="step-dot">2</div><div class="step-label">Curso de Interesse</div></div>
+    <div class="step" data-step="3"><div class="step-dot">3</div><div class="step-label">Documentação</div></div>
+    <div class="step" data-step="4"><div class="step-dot">4</div><div class="step-label">Pagamento</div></div>
+  </nav>
+
+  <main class="card" id="card">
+
+    <!-- ===================== ETAPA 1 ===================== -->
+    <section class="pane" data-pane="1">
+      <div class="card-head">
+        <h2><svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5 0-9 2.7-9 6v2h18v-2c0-3.3-4-6-9-6Z"/></svg> Dados Pessoais</h2>
+        <p>Informe seus dados exatamente como constam nos documentos.</p>
+      </div>
+
+      <div class="grid">
+        <div class="field col-full">
+          <label for="nome">Nome completo <span class="req">*</span></label>
+          <input class="input" id="nome" type="text" placeholder="Digite seu nome completo" autocomplete="name">
+          <div class="err-msg" data-for="nome"></div>
+        </div>
+
+        <div class="field">
+          <label for="cpf">CPF <span class="req">*</span></label>
+          <input class="input" id="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">
+          <div class="err-msg" data-for="cpf"></div>
+        </div>
+
+        <div class="field">
+          <label for="nascimento">Data de nascimento <span class="req">*</span></label>
+          <input class="input" id="nascimento" type="date">
+          <div class="err-msg" data-for="nascimento"></div>
+        </div>
+
+        <div class="field">
+          <label for="estadoCivil">Estado civil <span class="req">*</span></label>
+          <select class="input" id="estadoCivil">
+            <option value="">Selecione…</option>
+            <option>Solteiro(a)</option>
+            <option>Casado(a)</option>
+            <option>Divorciado(a)</option>
+            <option>Viúvo(a)</option>
+          </select>
+          <div class="err-msg" data-for="estadoCivil"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail <span class="req">*</span></label>
+          <input class="input" id="email" type="email" placeholder="seuemail@exemplo.com" autocomplete="email">
+          <div class="err-msg" data-for="email"></div>
+        </div>
+
+        <div class="field">
+          <label for="telefone">Telefone / WhatsApp <span class="req">*</span></label>
+          <input class="input" id="telefone" type="tel" inputmode="numeric" placeholder="(11) 90000-0000" maxlength="15">
+          <div class="err-msg" data-for="telefone"></div>
+        </div>
+
+        <div class="field">
+          <label for="cep">CEP <span class="req">*</span></label>
+          <input class="input" id="cep" type="text" inputmode="numeric" placeholder="00000-000" maxlength="9">
+          <div class="err-msg" data-for="cep"></div>
+          <div class="hint" id="cepHint">Preencha o CEP para completar o endereço automaticamente.</div>
+        </div>
+
+        <div class="field col-full">
+          <label for="endereco">Endereço (rua / avenida) <span class="req">*</span></label>
+          <input class="input" id="endereco" type="text" placeholder="Rua, avenida…" autocomplete="street-address">
+          <div class="err-msg" data-for="endereco"></div>
+        </div>
+
+        <div class="field">
+          <label for="numero">Número <span class="req">*</span></label>
+          <input class="input" id="numero" type="text" placeholder="Nº / apto">
+          <div class="err-msg" data-for="numero"></div>
+        </div>
+
+        <div class="field">
+          <label for="bairro">Bairro</label>
+          <input class="input" id="bairro" type="text" placeholder="Bairro">
+        </div>
+
+        <div class="field">
+          <label for="estado">Estado <span class="req">*</span></label>
+          <select class="input" id="estado"><option value="">Selecione…</option></select>
+          <div class="err-msg" data-for="estado"></div>
+        </div>
+
+        <div class="field">
+          <label for="cidade">Cidade <span class="req">*</span></label>
+          <input class="input" id="cidade" type="text" placeholder="Cidade">
+          <div class="err-msg" data-for="cidade"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <span></span>
+        <button class="btn btn-gold" data-next>PRÓXIMO
+          <svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7V5Z"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== ETAPA 2 ===================== -->
+    <section class="pane hidden" data-pane="2">
+      <div class="card-head">
+        <h2><svg viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.9V17h2V9L12 3ZM5 13.2V17c0 1.7 3.1 3 7 3s7-1.3 7-3v-3.8l-7 3.8-7-3.8Z"/></svg> Curso de Interesse</h2>
+        <p>Escolha o curso desejado. Os horários são exibidos conforme a disponibilidade de cada curso.</p>
+      </div>
+
+      <div class="course-list" id="courseList"></div>
+
+      <div id="shiftBlock" class="hidden mt-24">
+        <div class="sec-title">Horário de aula</div>
+        <div class="shift-grid" id="shiftList"></div>
+        <div class="err-msg mt-16" data-for="horario"></div>
+      </div>
+
+      <div class="err-msg mt-16" data-for="curso"></div>
+
+      <div class="actions">
+        <button class="btn btn-ghost" data-prev>
+          <svg viewBox="0 0 24 24"><path d="M16 5v14l-7-7 7-7Z"/></svg> VOLTAR
+        </button>
+        <button class="btn btn-gold" data-next>PRÓXIMO
+          <svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7V5Z"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== ETAPA 3 ===================== -->
+    <section class="pane hidden" data-pane="3">
+      <div class="card-head">
+        <h2><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm-1 7V3.5L18.5 9H13ZM8 13h8v2H8v-2Zm0 4h8v2H8v-2Z"/></svg> Documentação</h2>
+        <p>Anexe um documento de identificação com foto.</p>
+      </div>
+
+      <div class="alert alert-info">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z"/></svg>
+        <div>O documento deve estar <strong>legível e completo</strong> (frente e verso na mesma imagem, ou envie o PDF). Tamanho máximo: 10 MB.</div>
+      </div>
+
+      <label class="drop" id="dropDoc" for="fileDoc">
+        <div class="drop-ico" id="dropDocIco">
+          <svg viewBox="0 0 24 24"><path d="M12 3 7 8h3v7h4V8h3l-5-5ZM5 18v2h14v-2H5Z"/></svg>
+        </div>
+        <strong id="dropDocTitle">Documento de Identidade</strong>
+        <p id="dropDocText">Anexe seu RG ou CNH — arraste o arquivo aqui ou clique para selecionar</p>
+        <div class="formats"><span class="tag">JPG</span><span class="tag">PNG</span><span class="tag">PDF</span></div>
+        <input type="file" id="fileDoc" class="hidden" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf">
+      </label>
+      <div class="err-msg mt-16" data-for="doc"></div>
+
+      <div class="actions">
+        <button class="btn btn-ghost" data-prev>
+          <svg viewBox="0 0 24 24"><path d="M16 5v14l-7-7 7-7Z"/></svg> VOLTAR
+        </button>
+        <button class="btn btn-gold" data-next>PRÓXIMO
+          <svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7V5Z"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== ETAPA 4 ===================== -->
+    <section class="pane hidden" data-pane="4">
+      <div class="card-head">
+        <h2><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4H4V6h16v2Zm0 10H4v-6h16v6ZM6 14h6v2H6v-2Z"/></svg> Pagamento da Taxa de Matrícula</h2>
+        <p>Efetue o pagamento via PIX e anexe o comprovante para concluir.</p>
+      </div>
+
+      <div class="pay-amount">
+        <span>VALOR A PAGAR</span>
+        <strong id="valorTaxa">R$ 45,00</strong>
+      </div>
+
+      <div class="pix-box">
+        <div class="center"><div class="qr-box" id="qrBox"></div></div>
+
+        <div class="pix-row"><span>Chave PIX (CNPJ)</span><strong id="pixKey">53.753.608/0001-53</strong></div>
+        <div class="pix-row"><span>Favorecido</span><strong id="pixName">Colégio Oswaldo Cruz Educação Profissional Ltda</strong></div>
+        <div class="pix-row"><span>Instituição</span><strong>Banco do favorecido</strong></div>
+        <div class="pix-row"><span>Valor</span><strong id="pixValor">R$ 45,00</strong></div>
+
+        <button class="btn btn-gold btn-block mt-16" id="btnCopyKey">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/></svg>
+          COPIAR CHAVE PIX
+        </button>
+        <button class="btn btn-soft btn-block mt-16" id="btnCopyBr">
+          <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3Zm2 2v4h4V5H5Zm8-2h8v8h-8V3Zm2 2v4h4V5h-4ZM3 13h8v8H3v-8Zm2 2v4h4v-4H5Zm10-2h2v2h-2v-2Zm4 0h2v2h-2v-2Zm-4 4h2v2h-2v-2Zm4 0h2v4h-2v-4Zm-4 4h2v2h-2v-2Z"/></svg>
+          Copiar código PIX (copia e cola)
+        </button>
+        <div class="copy-code" id="brCode"></div>
+      </div>
+
+      <div class="sec-title">Comprovante de pagamento</div>
+      <label class="drop" id="dropComp" for="fileComp">
+        <div class="drop-ico" id="dropCompIco">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Zm-8 14-4-4 1.4-1.4L11 14.2l4.6-4.6L17 11l-6 6Z"/></svg>
+        </div>
+        <strong>Envie o comprovante de pagamento</strong>
+        <p>Arraste o comprovante aqui ou clique para selecionar</p>
+        <div class="formats"><span class="tag">JPG</span><span class="tag">PNG</span><span class="tag">PDF</span></div>
+        <input type="file" id="fileComp" class="hidden" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf">
+      </label>
+      <div class="err-msg mt-16" data-for="comp"></div>
+
+      <div class="alert alert-warn mt-24">
+        <svg viewBox="0 0 24 24"><path d="M12 2 1 21h22L12 2Zm0 6 6.5 11h-13L12 8Zm-1 3v4h2v-4h-2Zm0 5v2h2v-2h-2Z"/></svg>
+        <div>Sua vaga só é confirmada após a <strong>validação do comprovante</strong> pela secretaria. Você receberá o retorno por e-mail ou WhatsApp.</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-ghost" data-prev>
+          <svg viewBox="0 0 24 24"><path d="M16 5v14l-7-7 7-7Z"/></svg> VOLTAR
+        </button>
+        <button class="btn btn-gold" id="btnFinish">
+          <svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"/></svg>
+          FINALIZAR MATRÍCULA
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================== SUCESSO ===================== -->
+    <section class="pane hidden" data-pane="5">
+      <div class="success">
+        <div class="success-ico">
+          <svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"/></svg>
+        </div>
+        <h2>Matrícula enviada com sucesso!</h2>
+        <p>Recebemos sua solicitação de pré-matrícula. Nossa secretaria irá conferir os documentos e o comprovante de pagamento e entrará em contato em até <strong>2 dias úteis</strong>.</p>
+
+        <div class="protocol">
+          <span>PROTOCOLO</span>
+          <strong id="protoOut">—</strong>
+        </div>
+
+        <div class="pix-box" style="text-align:left">
+          <div class="pix-row"><span>Aluno</span><strong id="okNome">—</strong></div>
+          <div class="pix-row"><span>Curso</span><strong id="okCurso">—</strong></div>
+          <div class="pix-row"><span>Horário</span><strong id="okHorario">—</strong></div>
+          <div class="pix-row"><span>Situação</span><strong style="color:var(--warn)">Aguardando conferência</strong></div>
+        </div>
+
+        <div class="actions" style="justify-content:center;border:none">
+          <a class="btn btn-soft" id="btnZap" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.5-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.1.1.3 0 .5l-.3.4-.4.4c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.2.3.1.4.1.6-.1l.8-1c.2-.2.4-.2.6-.1l2 .9c.2.1.4.2.4.3.1.2.1.6-.1 1.1Z"/></svg>
+            FALAR COM A SECRETARIA
+          </a>
+          <button class="btn btn-gold" onclick="window.print()">
+            <svg viewBox="0 0 24 24"><path d="M19 8H5a3 3 0 0 0-3 3v6h4v4h12v-4h4v-6a3 3 0 0 0-3-3Zm-3 11H8v-5h8v5Zm3-7a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM18 3H6v4h12V3Z"/></svg>
+            IMPRIMIR COMPROVANTE
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <p id="footName">Colégio Oswaldo Cruz Educação Profissional Ltda · CNPJ 53.753.608/0001-53</p>
+    <p style="margin-top:6px">Portal de Matrículas · <a href="admin.html">Acesso administrativo</a></p>
+  </footer>
+</div>
+
+<div class="toast-area" id="toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="config.js"></script>
+<script>
+(function () {
+'use strict';
+
+/* ===================================================================
+   1. INFRAESTRUTURA
+   =================================================================== */
+const CFG   = window.CONFIG;
+const $     = (s, r) => (r || document).querySelector(s);
+const $$    = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+const LIVE  = CFG.SUPABASE_URL.indexOf('http') === 0 &&
+              CFG.SUPABASE_ANON_KEY.length > 30;
+
+const db = LIVE
+  ? window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY)
+  : null;
+
+if (!LIVE) $('#demoWarn').classList.remove('hidden');
+
+const MAX_MB   = 10;
+const OK_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+
+const state = {
+  step: 1,
+  curso: null,      // objeto do curso
+  horario: null,    // chave do horário
+  fileDoc: null,
+  fileComp: null
+};
+
+/* ---- Toast --------------------------------------------------------- */
+const ICONS = {
+  ok:  'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z',
+  err: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-2h2v2Zm0-4h-2V7h2v6Z',
+  info:'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm1 15h-2v-6h2v6Zm0-8h-2V7h2v2Z'
+};
+function toast(msg, kind) {
+  kind = kind || 'info';
+  const el = document.createElement('div');
+  el.className = 'toast ' + (kind === 'ok' ? 'ok' : kind === 'err' ? 'err' : '');
+  el.innerHTML = '<svg viewBox="0 0 24 24"><path d="' + (ICONS[kind] || ICONS.info) + '"/></svg><span></span>';
+  $('span', el).textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(() => { el.style.transition = 'opacity .3s'; el.style.opacity = '0'; }, 3200);
+  setTimeout(() => el.remove(), 3600);
+}
+
+/* ---- Erros de campo ------------------------------------------------ */
+function setErr(id, msg) {
+  const box = $('.err-msg[data-for="' + id + '"]');
+  const inp = document.getElementById(id);
+  if (box) { box.textContent = msg || ''; box.classList.toggle('show', !!msg); }
+  if (inp) inp.classList.toggle('invalid', !!msg);
+  return !msg;
+}
+function clearErrs(pane) {
+  $$('.err-msg', pane).forEach(e => { e.textContent = ''; e.classList.remove('show'); });
+  $$('.input', pane).forEach(e => e.classList.remove('invalid'));
+}
+
+/* ===================================================================
+   2. IDENTIDADE VISUAL (vem do config.js)
+   =================================================================== */
+const E = CFG.ESCOLA;
+$('#brandName').textContent = E.nome;
+$('#brandSub').textContent  = E.subtitulo;
+$('#pixKey').textContent    = E.cnpj;
+$('#pixName').textContent   = E.razao;
+$('#footName').textContent  = E.razao + ' · CNPJ ' + E.cnpj;
+document.title = 'Matrícula Online — ' + E.nome;
+if (E.logo) $('#logo').innerHTML = '<img src="' + E.logo + '" alt="' + E.nome + '">';
+
+const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+$('#valorTaxa').textContent = brl(CFG.TAXA_MATRICULA);
+$('#pixValor').textContent  = brl(CFG.TAXA_MATRICULA);
+
+if (E.whatsapp) {
+  $('#btnZap').href = 'https://wa.me/' + E.whatsapp;
+} else {
+  $('#btnZap').classList.add('hidden');
+}
+
+/* Lista de estados brasileiros */
+const UFS = [
+  ['AC','Acre'],['AL','Alagoas'],['AP','Amapá'],['AM','Amazonas'],['BA','Bahia'],
+  ['CE','Ceará'],['DF','Distrito Federal'],['ES','Espírito Santo'],['GO','Goiás'],
+  ['MA','Maranhão'],['MT','Mato Grosso'],['MS','Mato Grosso do Sul'],['MG','Minas Gerais'],
+  ['PA','Pará'],['PB','Paraíba'],['PR','Paraná'],['PE','Pernambuco'],['PI','Piauí'],
+  ['RJ','Rio de Janeiro'],['RN','Rio Grande do Norte'],['RS','Rio Grande do Sul'],
+  ['RO','Rondônia'],['RR','Roraima'],['SC','Santa Catarina'],['SP','São Paulo'],
+  ['SE','Sergipe'],['TO','Tocantins']
+];
+UFS.forEach(uf => {
+  const o = document.createElement('option');
+  o.value = uf[0]; o.textContent = uf[0] + ' — ' + uf[1];
+  $('#estado').appendChild(o);
+});
+
+/* ===================================================================
+   3. MÁSCARAS E VALIDAÇÕES
+   =================================================================== */
+const digits = s => (s || '').replace(/\D/g, '');
+
+function maskCPF(v) {
+  v = digits(v).slice(0, 11);
+  return v.replace(/(\d{3})(\d)/, '$1.$2')
+          .replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+          .replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+}
+function maskFone(v) {
+  v = digits(v).slice(0, 11);
+  if (v.length <= 10) return v.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{4})(\d)/, '$1-$2');
+  return v.replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
+}
+function maskCEP(v) {
+  return digits(v).slice(0, 8).replace(/(\d{5})(\d)/, '$1-$2');
+}
+
+/* Validação oficial de CPF (dígitos verificadores) */
+function cpfValido(cpf) {
+  cpf = digits(cpf);
+  if (cpf.length !== 11) return false;
+  if (/^(\d)\1{10}$/.test(cpf)) return false;
+  let s = 0;
+  for (let i = 0; i < 9; i++) s += parseInt(cpf[i], 10) * (10 - i);
+  let d1 = (s * 10) % 11; if (d1 === 10) d1 = 0;
+  if (d1 !== parseInt(cpf[9], 10)) return false;
+  s = 0;
+  for (let i = 0; i < 10; i++) s += parseInt(cpf[i], 10) * (11 - i);
+  let d2 = (s * 10) % 11; if (d2 === 10) d2 = 0;
+  return d2 === parseInt(cpf[10], 10);
+}
+const emailValido = v => /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test((v || '').trim());
+function foneValido(v) {
+  const d = digits(v);
+  if (d.length !== 10 && d.length !== 11) return false;
+  if (d.length === 11 && d[2] !== '9') return false;
+  return parseInt(d.slice(0, 2), 10) >= 11;
+}
+
+$('#cpf').addEventListener('input', e => { e.target.value = maskCPF(e.target.value); });
+$('#telefone').addEventListener('input', e => { e.target.value = maskFone(e.target.value); });
+$('#cep').addEventListener('input', e => {
+  e.target.value = maskCEP(e.target.value);
+  if (digits(e.target.value).length === 8) buscarCEP(digits(e.target.value));
+});
+
+/* Consulta de CEP (ViaCEP) */
+async function buscarCEP(cep) {
+  const hint = $('#cepHint');
+  hint.textContent = 'Buscando endereço…';
+  try {
+    const r = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
+    const d = await r.json();
+    if (d.erro) { hint.textContent = 'CEP não encontrado. Preencha o endereço manualmente.'; return; }
+    if (d.logradouro) $('#endereco').value = d.logradouro;
+    if (d.bairro)     $('#bairro').value   = d.bairro;
+    if (d.localidade) $('#cidade').value   = d.localidade;
+    if (d.uf)         $('#estado').value   = d.uf;
+    hint.textContent = 'Endereço preenchido automaticamente.';
+    ['endereco', 'cidade', 'estado'].forEach(k => setErr(k, ''));
+  } catch (_) {
+    hint.textContent = 'Não foi possível consultar o CEP. Preencha manualmente.';
+  }
+}
+
+/* ===================================================================
+   4. NAVEGAÇÃO ENTRE ETAPAS
+   =================================================================== */
+function pintarSteps() {
+  $$('#steps .step').forEach(el => {
+    const n = +el.dataset.step;
+    el.classList.toggle('active', n === state.step);
+    el.classList.toggle('done', n < state.step);
+    const dot = $('.step-dot', el);
+    dot.innerHTML = n < state.step
+      ? '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"/></svg>'
+      : String(n);
+  });
+}
+function irPara(n) {
+  state.step = n;
+  $$('.pane').forEach(p => p.classList.toggle('hidden', +p.dataset.pane !== n));
+  const atual = $('.pane[data-pane="' + n + '"]');
+  if (atual) atual.classList.add('fade');
+  $('#steps').classList.toggle('hidden', n === 5);
+  pintarSteps();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+pintarSteps();
+
+$$('[data-next]').forEach(b => b.addEventListener('click', () => {
+  if (validarEtapa(state.step)) irPara(state.step + 1);
+  else toast('Confira os campos destacados.', 'err');
+}));
+$$('[data-prev]').forEach(b => b.addEventListener('click', () => irPara(state.step - 1)));
+
+function validarEtapa(n) {
+  const pane = $('.pane[data-pane="' + n + '"]');
+  clearErrs(pane);
+  let ok = true;
+
+  if (n === 1) {
+    const nome = $('#nome').value.trim();
+    if (nome.length < 5 || nome.split(/\s+/).length < 2)
+      ok = setErr('nome', 'Informe o nome completo (nome e sobrenome).') && ok;
+
+    if (!cpfValido($('#cpf').value))
+      ok = setErr('cpf', 'CPF inválido. Confira os números.') && ok;
+
+    const nasc = $('#nascimento').value;
+    if (!nasc) ok = setErr('nascimento', 'Informe a data de nascimento.') && ok;
+    else {
+      const anos = (Date.now() - new Date(nasc).getTime()) / 31557600000;
+      if (anos < 14 || anos > 100)
+        ok = setErr('nascimento', 'Data de nascimento inválida.') && ok;
+    }
+
+    if (!$('#estadoCivil').value) ok = setErr('estadoCivil', 'Selecione o estado civil.') && ok;
+    if (!emailValido($('#email').value)) ok = setErr('email', 'E-mail inválido.') && ok;
+    if (!foneValido($('#telefone').value)) ok = setErr('telefone', 'Telefone inválido. Use DDD + número.') && ok;
+    if (digits($('#cep').value).length !== 8) ok = setErr('cep', 'CEP inválido.') && ok;
+    if ($('#endereco').value.trim().length < 4) ok = setErr('endereco', 'Informe o endereço.') && ok;
+    if (!$('#numero').value.trim()) ok = setErr('numero', 'Informe o número.') && ok;
+    if (!$('#estado').value) ok = setErr('estado', 'Selecione o estado.') && ok;
+    if ($('#cidade').value.trim().length < 2) ok = setErr('cidade', 'Informe a cidade.') && ok;
+  }
+
+  if (n === 2) {
+    if (!state.curso)   ok = setErr('curso', 'Selecione um curso para continuar.') && ok;
+    if (state.curso && !state.horario) ok = setErr('horario', 'Selecione o horário de aula.') && ok;
+  }
+
+  if (n === 3 && !state.fileDoc)
+    ok = setErr('doc', 'Anexe o documento de identidade (RG ou CNH).') && ok;
+
+  return ok;
+}
+
+/* ===================================================================
+   5. ETAPA 2 — CURSOS E HORÁRIOS
+   =================================================================== */
+const CHECK = '<svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"/></svg>';
+
+function montarCursos() {
+  const box = $('#courseList');
+  box.innerHTML = '';
+  CFG.CURSOS.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'course';
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.innerHTML =
+      '<div class="course-ico"><svg viewBox="0 0 24 24"><path d="' + c.icone + '"/></svg></div>' +
+      '<div class="course-info"><strong></strong><small></small></div>' +
+      '<div class="course-check">' + CHECK + '</div>';
+    $('strong', el).textContent = c.nome;
+    $('small', el).textContent  = c.tipo + ' · ' + c.duracao;
+    const escolher = () => selecionarCurso(c, el);
+    el.addEventListener('click', escolher);
+    el.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); escolher(); }
+    });
+    box.appendChild(el);
+  });
+}
+
+function selecionarCurso(curso, el) {
+  state.curso = curso;
+  state.horario = null;
+  $$('#courseList .course').forEach(x => x.classList.remove('sel'));
+  el.classList.add('sel');
+  setErr('curso', '');
+  montarHorarios(curso);
+}
+
+/* REGRA: só "Técnico em Enfermagem" tem todos os turnos.
+   Os demais cursos exibem somente Noite. Isso é definido em config.js. */
+function montarHorarios(curso) {
+  const bloco = $('#shiftBlock');
+  const lista = $('#shiftList');
+  lista.innerHTML = '';
+
+  curso.horarios.forEach(key => {
+    const h = CFG.HORARIOS[key];
+    if (!h) return;
+    const el = document.createElement('div');
+    el.className = 'shift';
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.innerHTML = '<strong></strong><small></small>';
+    $('strong', el).textContent = h.nome;
+    $('small', el).textContent  = h.faixa;
+    const escolher = () => {
+      state.horario = key;
+      $$('#shiftList .shift').forEach(x => x.classList.remove('sel'));
+      el.classList.add('sel');
+      setErr('horario', '');
+    };
+    el.addEventListener('click', escolher);
+    el.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); escolher(); }
+    });
+    lista.appendChild(el);
+  });
+
+  bloco.classList.remove('hidden');
+  bloco.classList.add('fade');
+
+  /* Se houver apenas um turno disponível, já vem selecionado. */
+  if (curso.horarios.length === 1) {
+    const unico = $('#shiftList .shift');
+    if (unico) unico.click();
+  }
+}
+montarCursos();
+
+/* ===================================================================
+   6. UPLOADS (arrastar e soltar)
+   =================================================================== */
+function nomeCurto(n) { return n.length > 34 ? n.slice(0, 31) + '…' : n; }
+
+function ligarUpload(dropId, inputId, chave, errKey) {
+  const drop  = document.getElementById(dropId);
+  const input = document.getElementById(inputId);
+  const titulo = $('strong', drop);
+  const texto  = $('p', drop);
+
+  function aceitar(file) {
+    if (!file) return;
+    if (OK_TYPES.indexOf(file.type) === -1) {
+      setErr(errKey, 'Formato não permitido. Envie JPG, PNG ou PDF.');
+      toast('Formato de arquivo não permitido.', 'err');
+      return;
+    }
+    if (file.size > MAX_MB * 1024 * 1024) {
+      setErr(errKey, 'Arquivo muito grande. Máximo ' + MAX_MB + ' MB.');
+      toast('Arquivo maior que ' + MAX_MB + ' MB.', 'err');
+      return;
+    }
+    state[chave] = file;
+    setErr(errKey, '');
+    drop.classList.add('filled');
+    titulo.textContent = nomeCurto(file.name);
+    texto.textContent  = (file.size / 1024 / 1024).toFixed(2) + ' MB · clique para trocar o arquivo';
+    toast('Arquivo anexado com sucesso.', 'ok');
+  }
+
+  input.addEventListener('change', e => aceitar(e.target.files[0]));
+
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => {
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) aceitar(e.dataTransfer.files[0]);
+  });
+}
+
+ligarUpload('dropDoc',  'fileDoc',  'fileDoc',  'doc');
+ligarUpload('dropComp', 'fileComp', 'fileComp', 'comp');
+
+/* ===================================================================
+   7. PIX — chave, código copia-e-cola e QR Code
+   =================================================================== */
+function limpar(txt, max) {
+  return (txt || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^A-Za-z0-9 ]/g, '')
+    .toUpperCase().trim().slice(0, max);
+}
+function campo(id, valor) {
+  return id + String(valor.length).padStart(2, '0') + valor;
+}
+function crc16(str) {
+  let crc = 0xFFFF;
+  for (let i = 0; i < str.length; i++) {
+    crc ^= str.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) {
+      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+      crc &= 0xFFFF;
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, '0');
+}
+function gerarBRCode() {
+  const conta = campo('00', 'br.gov.bcb.pix') + campo('01', E.chavePix);
+  let p = campo('00', '01')
+        + campo('26', conta)
+        + campo('52', '0000')
+        + campo('53', '986')
+        + campo('54', CFG.TAXA_MATRICULA.toFixed(2))
+        + campo('58', 'BR')
+        + campo('59', limpar(E.nomePix || E.nome, 25))
+        + campo('60', limpar(E.cidadePix, 15))
+        + campo('62', campo('05', '***'));
+  p += '6304';
+  return p + crc16(p);
+}
+
+const BRCODE = gerarBRCode();
+$('#brCode').textContent = BRCODE;
+
+try {
+  new QRCode($('#qrBox'), {
+    text: BRCODE, width: 320, height: 320,
+    colorDark: '#0a1428', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+} catch (_) { $('#qrBox').style.display = 'none'; }
+
+async function copiar(texto) {
+  try {
+    await navigator.clipboard.writeText(texto);
+    return true;
+  } catch (_) {
+    const ta = document.createElement('textarea');
+    ta.value = texto;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    ta.remove();
+    return ok;
+  }
+}
+
+$('#btnCopyKey').addEventListener('click', async () => {
+  const ok = await copiar(E.cnpj);
+  toast(ok ? 'Chave PIX copiada com sucesso!' : 'Não foi possível copiar. Copie manualmente.', ok ? 'ok' : 'err');
+});
+$('#btnCopyBr').addEventListener('click', async () => {
+  const ok = await copiar(BRCODE);
+  toast(ok ? 'Código PIX copiado com sucesso!' : 'Não foi possível copiar.', ok ? 'ok' : 'err');
+});
+
+/* ===================================================================
+   8. ENVIO DA MATRÍCULA
+   =================================================================== */
+function gerarProtocolo() {
+  const d = new Date();
+  const ano = String(d.getFullYear()).slice(2);
+  const mes = String(d.getMonth() + 1).padStart(2, '0');
+  const rnd = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return 'COC-' + ano + mes + '-' + rnd;
+}
+
+function extensao(file) {
+  const m = /\.([A-Za-z0-9]+)$/.exec(file.name);
+  return (m ? m[1] : 'bin').toLowerCase();
+}
+
+async function enviarArquivo(file, caminho) {
+  const { error } = await db.storage.from('documentos')
+    .upload(caminho, file, { cacheControl: '3600', upsert: true, contentType: file.type });
+  if (error) throw new Error('Falha ao enviar arquivo: ' + error.message);
+  return caminho;
+}
+
+const btnFinish = $('#btnFinish');
+
+btnFinish.addEventListener('click', async () => {
+  if (!validarEtapa(1)) { irPara(1); toast('Revise os dados pessoais.', 'err'); return; }
+  if (!validarEtapa(2)) { irPara(2); toast('Selecione curso e horário.', 'err'); return; }
+  if (!validarEtapa(3)) { irPara(3); toast('Anexe o documento de identidade.', 'err'); return; }
+
+  clearErrs($('.pane[data-pane="4"]'));
+  if (!state.fileComp) {
+    setErr('comp', 'Anexe o comprovante do pagamento para finalizar.');
+    toast('Falta o comprovante de pagamento.', 'err');
+    return;
+  }
+
+  const original = btnFinish.innerHTML;
+  btnFinish.disabled = true;
+  btnFinish.innerHTML = '<span class="spinner"></span> ENVIANDO…';
+
+  const protocolo = gerarProtocolo();
+
+  const registro = {
+    protocolo:       protocolo,
+    nome:            $('#nome').value.trim(),
+    cpf:             digits($('#cpf').value),
+    data_nascimento: $('#nascimento').value,
+    estado_civil:    $('#estadoCivil').value,
+    email:           $('#email').value.trim().toLowerCase(),
+    telefone:        $('#telefone').value,
+    whatsapp:        digits($('#telefone').value),
+    cep:             $('#cep').value,
+    endereco:        $('#endereco').value.trim(),
+    numero:          $('#numero').value.trim(),
+    bairro:          $('#bairro').value.trim(),
+    cidade:          $('#cidade').value.trim(),
+    estado:          $('#estado').value,
+    curso:           state.curso.nome,
+    horario:         CFG.HORARIOS[state.horario].nome + ' (' + CFG.HORARIOS[state.horario].faixa + ')',
+    status:          'pendente',
+    valor_taxa:      CFG.TAXA_MATRICULA
+  };
+
+  try {
+    if (LIVE) {
+      registro.doc_identidade = await enviarArquivo(
+        state.fileDoc, protocolo + '/identidade.' + extensao(state.fileDoc));
+      registro.comprovante_pix = await enviarArquivo(
+        state.fileComp, protocolo + '/comprovante.' + extensao(state.fileComp));
+
+      const { error } = await db.from('matriculas').insert(registro);
+      if (error) throw new Error(error.message);
+    } else {
+      await new Promise(r => setTimeout(r, 900)); // simulação
+    }
+
+    $('#protoOut').textContent  = protocolo;
+    $('#okNome').textContent    = registro.nome;
+    $('#okCurso').textContent   = registro.curso;
+    $('#okHorario').textContent = registro.horario;
+
+    if (E.whatsapp) {
+      const msg = 'Olá! Enviei minha matrícula online.%0A%0A' +
+        '*Protocolo:* ' + protocolo + '%0A' +
+        '*Nome:* ' + encodeURIComponent(registro.nome) + '%0A' +
+        '*CPF:* ' + registro.cpf + '%0A' +
+        '*Curso:* ' + encodeURIComponent(registro.curso) + '%0A' +
+        '*Horário:* ' + encodeURIComponent(registro.horario);
+      $('#btnZap').href = 'https://wa.me/' + E.whatsapp + '?text=' + msg;
+    }
+
+    irPara(5);
+    toast(LIVE ? 'Matrícula registrada!' : 'Simulação concluída (modo demonstração).', 'ok');
+
+  } catch (err) {
+    console.error(err);
+    toast('Erro ao enviar: ' + err.message, 'err');
+    setErr('comp', 'Não foi possível concluir o envio. Tente novamente em instantes.');
+  } finally {
+    btnFinish.disabled = false;
+    btnFinish.innerHTML = original;
+  }
+});
+
+/* Evita perder o preenchimento por engano */
+window.addEventListener('beforeunload', e => {
+  if (state.step > 1 && state.step < 5) { e.preventDefault(); e.returnValue = ''; }
+});
+
+})();
+</script>
+</body>
+</html>
