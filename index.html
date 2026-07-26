@@ -759,7 +759,7 @@ function extensao(file) {
 
 async function enviarArquivo(file, caminho) {
   const { error } = await db.storage.from('documentos')
-    .upload(caminho, file, { cacheControl: '3600', upsert: true, contentType: file.type });
+    .upload(caminho, file, { cacheControl: '3600', upsert: false, contentType: file.type });
   if (error) throw new Error('Falha ao enviar arquivo: ' + error.message);
   return caminho;
 }
