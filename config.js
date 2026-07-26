@@ -32,7 +32,7 @@ window.CONFIG = {
     // Nome que aparece no QR Code do PIX. Sem acento, MÁXIMO 25 letras.
     nomePix:   'COLEGIO OSWALDO CRUZ',
     // ATENÇÃO: cidade da conta bancária, sem acento, máx. 15 letras.
-    cidadePix: 'SAO PAULO',
+    cidadePix: 'GOIANIA',
     // WhatsApp da secretaria (só números, com 55 na frente).
     // Deixe '' para desativar o botão de WhatsApp.
     whatsapp:  '',
