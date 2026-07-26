@@ -1,0 +1,22 @@
+# =====================================================================
+#  Regras de cache do Cloudflare Pages
+#
+#  O config.js guarda dados que mudam (chave PIX, cidade, cursos,
+#  WhatsApp). Sem esta regra, o navegador do aluno pode ficar dias
+#  usando uma versao antiga do arquivo depois de uma alteracao.
+#
+#  "no-cache" nao desliga o cache: o navegador guarda o arquivo, mas
+#  pergunta ao servidor se mudou antes de usar. E rapido e sempre atual.
+# =====================================================================
+
+/config.js
+  Cache-Control: no-cache, must-revalidate
+
+/index.html
+  Cache-Control: no-cache, must-revalidate
+
+/admin.html
+  Cache-Control: no-cache, must-revalidate
+
+/styles.css
+  Cache-Control: no-cache, must-revalidate
