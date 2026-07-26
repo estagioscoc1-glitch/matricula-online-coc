@@ -1,0 +1,70 @@
+# =====================================================================
+#  ROBÔ ANTI-PAUSA — Colégio Oswaldo Cruz
+#
+#  O Supabase pausa projetos gratuitos que ficam 1 semana sem uso.
+#  Esta rotina roda sozinha nos servidores do GitHub, de 2 em 2 dias,
+#  faz uma consulta boba no banco e grava a data num arquivo.
+#
+#  A consulta mantém o BANCO acordado.
+#  O arquivo com a data mantém a PRÓPRIA ROTINA acordada — o GitHub
+#  desliga rotinas em repositórios parados há mais de 60 dias.
+#
+#  Não precisa fazer nada. Para rodar na hora, vá em Actions ->
+#  "Manter banco ativo" -> "Run workflow".
+# =====================================================================
+
+name: Manter banco ativo
+
+on:
+  schedule:
+    - cron: '17 11 */2 * *'   # a cada 2 dias, 11h17 UTC (~08h17 em Brasília)
+  workflow_dispatch:           # permite rodar na mão pelo painel
+
+permissions:
+  contents: write
+
+concurrency:
+  group: manter-banco-ativo
+  cancel-in-progress: false
+
+jobs:
+  acordar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Consultar o banco de dados
+        env:
+          SUPABASE_URL: https://lnmxkfmbohctvqlfpbmt.supabase.co
+          SUPABASE_KEY: sb_publishable_RLPSR2Z1z2AD2Tbpy23leA_IJqLkLIm
+        run: |
+          set -u
+          codigo=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 \
+            "${SUPABASE_URL}/rest/v1/matriculas?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_KEY}")
+
+          echo "Resposta do banco: HTTP ${codigo}"
+
+          if [ "${codigo}" = "200" ]; then
+            echo "Banco respondeu normalmente."
+          else
+            echo "::error::O banco respondeu HTTP ${codigo}. Verifique se o projeto do Supabase está ativo."
+            exit 1
+          fi
+
+      - name: Registrar a data da última verificação
+        run: |
+          mkdir -p .github
+          date -u '+Última verificação: %Y-%m-%d %H:%M UTC' > .github/ultima-verificacao.txt
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .github/ultima-verificacao.txt
+          if git diff --staged --quiet; then
+            echo "Nada mudou."
+          else
+            git commit -m 'Verificacao automatica do banco'
+            git push
+          fi
