@@ -20,6 +20,25 @@ window.CONFIG = {
 
 
   /* ------------------------------------------------------------------
+     1b) AVISO PARA O PORTAL ACADÊMICO
+     Quando chega uma matrícula, o portal da secretaria toca um alarme.
+
+     O portal usa OUTRO banco de dados, então precisa das chaves dele:
+        painel do Supabase -> projeto do PORTAL -> Settings -> API
+        "Project URL"  -> URL
+        "anon public"  -> CHAVE
+
+     Enquanto estiver COLE_AQUI, nada é enviado e o site funciona igual.
+     Só o aviso é enviado — protocolo, curso e horário. Nome, CPF, telefone
+     e documentos nunca saem daqui.
+     ------------------------------------------------------------------ */
+  PORTAL_ALERTA: {
+    URL:   'https://aficipymrnmjqhisduyp.supabase.co',
+    CHAVE: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmaWNpcHltcm5tanFoaXNkdXlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMTQ5NDMsImV4cCI6MjEwMDY5MDk0M30.0ywz73542hBThlJ1vfciQ1nRPe52a9bRub92J93wDaQ'
+  },
+
+
+  /* ------------------------------------------------------------------
      2) DADOS DA INSTITUIÇÃO
      ------------------------------------------------------------------ */
   ESCOLA: {
