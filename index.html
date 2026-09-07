@@ -744,6 +744,39 @@ $('#btnCopyBr').addEventListener('click', async () => {
 /* ===================================================================
    8. ENVIO DA MATRÍCULA
    =================================================================== */
+/* ===================================================================
+   AVISO PARA O PORTAL ACADÊMICO
+   O portal usa outro banco de dados, então falamos com ele pela API
+   pública do Supabase dele — as chaves ficam no config.js, em
+   PORTAL_ALERTA. Sem chaves preenchidas, esta função não faz nada e o
+   site continua funcionando igual.
+   =================================================================== */
+async function avisarPortal(reg) {
+  const P = (window.CONFIG || {}).PORTAL_ALERTA;
+  if (!P || !P.URL || !P.CHAVE || String(P.URL).includes('COLE_AQUI')) return;
+
+  try {
+    await fetch(P.URL.replace(/\/$/, '') + '/rest/v1/eventos_alerta', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': P.CHAVE,
+        'Authorization': 'Bearer ' + P.CHAVE,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        origem: 'MATRICULA',
+        titulo: 'Matricula nova: ' + reg.curso,
+        detalhe: 'Protocolo ' + reg.protocolo + ' - ' + reg.horario,
+        link: 'https://matriculasonline.colegiooswaldocruz.com.br/admin.html'
+      })
+    });
+  } catch (e) {
+    /* Portal fora do ar ou sem internet. A matrícula já está salva. */
+    console.warn('[Aviso ao portal] nao foi possivel avisar:', e);
+  }
+}
+
 function gerarProtocolo() {
   const d = new Date();
   const ano = String(d.getFullYear()).slice(2);
@@ -814,6 +847,17 @@ btnFinish.addEventListener('click', async () => {
 
       const { error } = await db.from('matriculas').insert(registro);
       if (error) throw new Error(error.message);
+
+      /* CAMPAINHA NO PORTAL DA SECRETARIA.
+         Só o aviso: protocolo, curso e horário. Nome, CPF, telefone e
+         documentos ficam aqui, neste banco. O portal recebe uma campainha,
+         não uma cópia da ficha.
+
+         Vem depois da gravação de propósito, e sem travar nada: se o portal
+         estiver fora do ar, a matrícula já está salva e o visitante recebe o
+         protocolo do mesmo jeito. Perder o aviso é chato; perder a matrícula
+         seria grave. */
+      avisarPortal(registro);
     } else {
       await new Promise(r => setTimeout(r, 900)); // simulação
     }
