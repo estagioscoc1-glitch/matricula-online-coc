@@ -38,6 +38,7 @@ create table if not exists public.matriculas (
   -- ----- Dados da matrícula -----
   curso             text not null,
   horario           text not null,
+  periodo           text,          -- semestre letivo: 2027/1, 2027/2, ...
 
   -- ----- Documentos (caminho dentro do bucket "documentos") -----
   doc_identidade    text,
@@ -57,6 +58,10 @@ create index if not exists idx_matriculas_criado_em on public.matriculas (criado
 create index if not exists idx_matriculas_status    on public.matriculas (status);
 create index if not exists idx_matriculas_curso     on public.matriculas (curso);
 create index if not exists idx_matriculas_cpf       on public.matriculas (cpf);
+create index if not exists idx_matriculas_periodo   on public.matriculas (periodo);
+
+-- Para bancos que já existiam antes desta coluna:
+alter table public.matriculas add column if not exists periodo text;
 
 
 -- ---------------------------------------------------------------------

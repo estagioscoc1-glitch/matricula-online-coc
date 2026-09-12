@@ -820,6 +820,7 @@ btnFinish.addEventListener('click', async () => {
     estado:          $('#estado').value,
     curso:           state.curso.nome,
     horario:         CFG.HORARIOS[state.horario].nome + ' (' + CFG.HORARIOS[state.horario].faixa + ')',
+    periodo:         (CFG.PERIODO && CFG.PERIODO.rotulo) || null,
     status:          'pendente',
     valor_taxa:      CFG.TAXA_MATRICULA
   };
@@ -831,7 +832,19 @@ btnFinish.addEventListener('click', async () => {
       registro.comprovante_pix = await enviarArquivo(
         state.fileComp, protocolo + '/comprovante.' + extensao(state.fileComp));
 
-      const { error } = await db.from('matriculas').insert(registro);
+      let { error } = await db.from('matriculas').insert(registro);
+
+      /* Se a coluna "periodo" ainda não foi criada no banco, o envio não pode
+         falhar por causa disso — o aluno já pagou a taxa. Tenta de novo sem
+         ela e registra o aviso no console para o administrador. */
+      if (error && /periodo/i.test(error.message)) {
+        console.warn('[Matrícula] Coluna "periodo" ausente no banco. ' +
+                     'Rode o SQL de atualização. Enviando sem o período.');
+        const semPeriodo = Object.assign({}, registro);
+        delete semPeriodo.periodo;
+        ({ error } = await db.from('matriculas').insert(semPeriodo));
+      }
+
       if (error) throw new Error(error.message);
     } else {
       await new Promise(r => setTimeout(r, 900)); // simulação

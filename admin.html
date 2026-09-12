@@ -83,6 +83,7 @@
       <option value="cancelada">Canceladas</option>
     </select>
     <select class="input" id="fCurso"><option value="">Todos os cursos</option></select>
+    <select class="input" id="fPeriodo"><option value="">Todos os períodos</option></select>
   </div>
 
   <div class="table-wrap">
@@ -247,8 +248,24 @@ async function carregar() {
 
   if (error) { toast('Erro ao carregar: ' + error.message, 'err'); return; }
   LISTA = data || [];
+  montarFiltroPeriodo();
   atualizarStats();
   desenhar();
+}
+
+/* O filtro de período é montado a partir do que existe no banco, então
+   ele acompanha sozinho a virada de semestre (2027/1, 2027/2, ...). */
+function montarFiltroPeriodo() {
+  const sel = $('#fPeriodo');
+  const atual = sel.value;
+  const periodos = [...new Set(LISTA.map(m => m.periodo).filter(Boolean))].sort().reverse();
+  sel.innerHTML = '<option value="">Todos os períodos</option>';
+  periodos.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p; o.textContent = p;
+    sel.appendChild(o);
+  });
+  sel.value = atual;
 }
 
 function atualizarStats() {
@@ -263,9 +280,11 @@ function filtradas() {
   const q  = $('#fBusca').value.trim().toLowerCase();
   const st = $('#fStatus').value;
   const cu = $('#fCurso').value;
+  const pe = $('#fPeriodo').value;
   return LISTA.filter(m => {
     if (st && m.status !== st) return false;
     if (cu && m.curso !== cu) return false;
+    if (pe && m.periodo !== pe) return false;
     if (!q) return true;
     return [m.nome, m.cpf, m.email, m.protocolo, m.telefone]
       .some(v => String(v || '').toLowerCase().includes(q));
@@ -284,7 +303,9 @@ function desenhar() {
   rows.forEach(m => {
     const tr = document.createElement('tr');
     tr.innerHTML =
-      '<td style="font-family:ui-monospace,monospace;font-size:12.5px">' + esc(m.protocolo) + '</td>' +
+      '<td style="font-family:ui-monospace,monospace;font-size:12.5px">' + esc(m.protocolo) +
+        (m.periodo ? '<div class="sub" style="font-family:var(--font)">' + esc(m.periodo) + '</div>' : '') +
+      '</td>' +
       '<td><div class="nm">' + esc(m.nome) + '</div><div class="sub">' + fmtCPF(m.cpf) + '</div></td>' +
       '<td>' + esc(m.curso) + '</td>' +
       '<td class="sub">' + esc(m.horario) + '</td>' +
@@ -304,7 +325,7 @@ function desenhar() {
   });
 }
 
-['fBusca', 'fStatus', 'fCurso'].forEach(id =>
+['fBusca', 'fStatus', 'fCurso', 'fPeriodo'].forEach(id =>
   $('#' + id).addEventListener('input', desenhar));
 $('#btnReload').addEventListener('click', () => { carregar(); toast('Lista atualizada.', 'ok'); });
 
@@ -408,6 +429,7 @@ async function abrirDetalhe(id) {
     '<dl class="dl">' +
       '<dt>Curso</dt><dd>' + esc(m.curso) + '</dd>' +
       '<dt>Horário</dt><dd>' + esc(m.horario) + '</dd>' +
+      '<dt>Período letivo</dt><dd>' + esc(m.periodo || '—') + '</dd>' +
       '<dt>Recebida em</dt><dd>' + dataHora(m.criado_em) + '</dd>' +
       '<dt>Taxa</dt><dd>' + brl(m.valor_taxa) + '</dd>' +
     '</dl>' +
@@ -469,6 +491,7 @@ $('#btnCsv').addEventListener('click', () => {
     ['estado_civil', 'Estado civil'], ['email', 'E-mail'], ['telefone', 'Telefone'],
     ['cep', 'CEP'], ['endereco', 'Endereço'], ['numero', 'Número'], ['bairro', 'Bairro'],
     ['cidade', 'Cidade'], ['estado', 'UF'], ['curso', 'Curso'], ['horario', 'Horário'],
+    ['periodo', 'Período letivo'],
     ['valor_taxa', 'Taxa'], ['observacoes', 'Observações']
   ];
 
