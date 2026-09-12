@@ -20,25 +20,6 @@ window.CONFIG = {
 
 
   /* ------------------------------------------------------------------
-     1b) AVISO PARA O PORTAL ACADÊMICO
-     Quando chega uma matrícula, o portal da secretaria toca um alarme.
-
-     O portal usa OUTRO banco de dados, então precisa das chaves dele:
-        painel do Supabase -> projeto do PORTAL -> Settings -> API
-        "Project URL"  -> URL
-        "anon public"  -> CHAVE
-
-     Enquanto estiver COLE_AQUI, nada é enviado e o site funciona igual.
-     Só o aviso é enviado — protocolo, curso e horário. Nome, CPF, telefone
-     e documentos nunca saem daqui.
-     ------------------------------------------------------------------ */
-  PORTAL_ALERTA: {
-    URL:   'https://aficipymrnmjqhisduyp.supabase.co',
-    CHAVE: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmaWNpcHltcm5tanFoaXNkdXlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMTQ5NDMsImV4cCI6MjEwMDY5MDk0M30.0ywz73542hBThlJ1vfciQ1nRPe52a9bRub92J93wDaQ'
-  },
-
-
-  /* ------------------------------------------------------------------
      2) DADOS DA INSTITUIÇÃO
      ------------------------------------------------------------------ */
   ESCOLA: {
@@ -66,7 +47,21 @@ window.CONFIG = {
 
 
   /* ------------------------------------------------------------------
-     4) CURSOS E HORÁRIOS
+     4) PERÍODO DA MATRÍCULA
+     Aparece em destaque no topo da página e também no rodapé.
+     Quando abrir o semestre seguinte, é só trocar aqui.
+     Deixe '' para não exibir nada.
+     ------------------------------------------------------------------ */
+  PERIODO: {
+    selo:     'TURMAS 2027/1',
+    chamada:  'Matrículas abertas para o primeiro semestre de 2027',
+    // Rótulo curto, usado no comprovante que o aluno recebe no final
+    rotulo:   '2027/1'
+  },
+
+
+  /* ------------------------------------------------------------------
+     5) CURSOS E HORÁRIOS
      Para adicionar/remover cursos, edite a lista abaixo.
      'horarios' aceita: 'manha', 'tarde', 'noite', 'sabado'
      ------------------------------------------------------------------ */
@@ -109,14 +104,6 @@ window.CONFIG = {
       tipo: 'Especialização',
       duracao: '6 meses',
       icone: 'M9 2h6v2h4a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h4V2Zm1.5 7v2.5H8v3h2.5V17h3v-2.5H16v-3h-2.5V9h-3Z',
-      horarios: ['noite']
-    },
-    {
-      id: 'reciclagem-ead',
-      nome: 'Reciclagem em Enfermagem (EAD)',
-      tipo: 'Atualização • EAD',
-      duracao: '2 meses',
-      icone: 'M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-6v2h3v2H7v-2h3v-2H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Zm2 3v7h12V7H6Z',
       horarios: ['noite']
     }
   ],

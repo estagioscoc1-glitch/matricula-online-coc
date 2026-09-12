@@ -24,8 +24,10 @@
     <div class="brand-name" id="brandName">COLÉGIO OSWALDO CRUZ</div>
     <div class="brand-sub" id="brandSub">Educação Profissional</div>
     <div class="brand-rule"></div>
+    <div class="periodo-selo hidden" id="periodoSelo"></div>
     <h1 class="page-title"><span>MATRÍCULA ONLINE</span></h1>
     <p class="page-desc">Preencha o formulário abaixo para garantir sua vaga</p>
+    <p class="periodo-chamada hidden" id="periodoChamada"></p>
   </header>
 
   <div id="demoWarn" class="alert alert-warn hidden">
@@ -264,7 +266,7 @@
           <svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z"/></svg>
         </div>
         <h2>Matrícula enviada com sucesso!</h2>
-        <p>Recebemos sua solicitação de pré-matrícula. Nossa secretaria irá conferir os documentos e o comprovante de pagamento e entrará em contato em até <strong>2 dias úteis</strong>.</p>
+        <p>Recebemos sua solicitação de pré-matrícula<span id="okPeriodoTexto"></span>. Nossa secretaria irá conferir os documentos e o comprovante de pagamento e entrará em contato em até <strong>2 dias úteis</strong>.</p>
 
         <div class="protocol">
           <span>PROTOCOLO</span>
@@ -275,6 +277,7 @@
           <div class="pix-row"><span>Aluno</span><strong id="okNome">—</strong></div>
           <div class="pix-row"><span>Curso</span><strong id="okCurso">—</strong></div>
           <div class="pix-row"><span>Horário</span><strong id="okHorario">—</strong></div>
+          <div class="pix-row hidden" id="okPeriodoRow"><span>Período letivo</span><strong id="okPeriodo">—</strong></div>
           <div class="pix-row"><span>Situação</span><strong style="color:var(--warn)">Aguardando conferência</strong></div>
         </div>
 
@@ -376,6 +379,22 @@ $('#pixName').textContent   = E.razao;
 $('#footName').textContent  = E.razao + ' · CNPJ ' + E.cnpj;
 document.title = 'Matrícula Online — ' + E.nome;
 if (E.logo) $('#logo').innerHTML = '<img src="' + E.logo + '" alt="' + E.nome + '">';
+
+/* Período da matrícula (ex.: 2027/1) */
+const P = CFG.PERIODO || {};
+if (P.selo) {
+  $('#periodoSelo').textContent = P.selo;
+  $('#periodoSelo').classList.remove('hidden');
+}
+if (P.chamada) {
+  $('#periodoChamada').textContent = P.chamada;
+  $('#periodoChamada').classList.remove('hidden');
+}
+if (P.rotulo) {
+  $('#okPeriodo').textContent = P.rotulo;
+  $('#okPeriodoRow').classList.remove('hidden');
+  $('#okPeriodoTexto').textContent = ' para o período letivo ' + P.rotulo;
+}
 
 const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 $('#valorTaxa').textContent = brl(CFG.TAXA_MATRICULA);
@@ -744,39 +763,6 @@ $('#btnCopyBr').addEventListener('click', async () => {
 /* ===================================================================
    8. ENVIO DA MATRÍCULA
    =================================================================== */
-/* ===================================================================
-   AVISO PARA O PORTAL ACADÊMICO
-   O portal usa outro banco de dados, então falamos com ele pela API
-   pública do Supabase dele — as chaves ficam no config.js, em
-   PORTAL_ALERTA. Sem chaves preenchidas, esta função não faz nada e o
-   site continua funcionando igual.
-   =================================================================== */
-async function avisarPortal(reg) {
-  const P = (window.CONFIG || {}).PORTAL_ALERTA;
-  if (!P || !P.URL || !P.CHAVE || String(P.URL).includes('COLE_AQUI')) return;
-
-  try {
-    await fetch(P.URL.replace(/\/$/, '') + '/rest/v1/eventos_alerta', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': P.CHAVE,
-        'Authorization': 'Bearer ' + P.CHAVE,
-        'Prefer': 'return=minimal'
-      },
-      body: JSON.stringify({
-        origem: 'MATRICULA',
-        titulo: 'Matricula nova: ' + reg.curso,
-        detalhe: 'Protocolo ' + reg.protocolo + ' - ' + reg.horario,
-        link: 'https://matriculasonline.colegiooswaldocruz.com.br/admin.html'
-      })
-    });
-  } catch (e) {
-    /* Portal fora do ar ou sem internet. A matrícula já está salva. */
-    console.warn('[Aviso ao portal] nao foi possivel avisar:', e);
-  }
-}
-
 function gerarProtocolo() {
   const d = new Date();
   const ano = String(d.getFullYear()).slice(2);
@@ -847,17 +833,6 @@ btnFinish.addEventListener('click', async () => {
 
       const { error } = await db.from('matriculas').insert(registro);
       if (error) throw new Error(error.message);
-
-      /* CAMPAINHA NO PORTAL DA SECRETARIA.
-         Só o aviso: protocolo, curso e horário. Nome, CPF, telefone e
-         documentos ficam aqui, neste banco. O portal recebe uma campainha,
-         não uma cópia da ficha.
-
-         Vem depois da gravação de propósito, e sem travar nada: se o portal
-         estiver fora do ar, a matrícula já está salva e o visitante recebe o
-         protocolo do mesmo jeito. Perder o aviso é chato; perder a matrícula
-         seria grave. */
-      avisarPortal(registro);
     } else {
       await new Promise(r => setTimeout(r, 900)); // simulação
     }

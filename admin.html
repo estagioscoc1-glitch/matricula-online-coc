@@ -188,8 +188,30 @@ $('#loginForm').addEventListener('submit', async e => {
   btn.innerHTML = orig;
 
   if (error) {
-    box.textContent = 'E-mail ou senha incorretos.';
+    /* Mensagens honestas: cada falha tem uma causa diferente e uma solução
+       diferente. Dizer sempre "senha incorreta" faz a pessoa perder horas
+       tentando trocar a senha quando o problema era a rede. */
+    const m = (error.message || '').toLowerCase();
+    let texto;
+
+    if (m.includes('failed to fetch') || m.includes('network') || m.includes('load failed')) {
+      texto = 'Não foi possível falar com o servidor. Isso costuma ser VPN, proxy, ' +
+              'antivírus ou firewall bloqueando. Desative a VPN, teste numa janela ' +
+              'anônima ou use o 4G do celular. A senha ainda não foi verificada.';
+    } else if (m.includes('invalid login') || m.includes('invalid credentials')) {
+      texto = 'E-mail ou senha incorretos. A conexão com o servidor está funcionando.';
+    } else if (m.includes('email not confirmed')) {
+      texto = 'Este usuário não foi confirmado. Recrie-o no Supabase com a opção ' +
+              '"Auto confirm user" marcada.';
+    } else if (m.includes('rate') || m.includes('too many')) {
+      texto = 'Muitas tentativas seguidas. Espere alguns minutos e tente de novo.';
+    } else {
+      texto = 'Não foi possível entrar: ' + error.message;
+    }
+
+    box.textContent = texto;
     box.classList.add('show');
+    console.error('[Painel] Falha no login:', error);
     return;
   }
   abrirPainel(data.user);
@@ -274,6 +296,9 @@ function desenhar() {
           ? '<button class="btn btn-ok btn-sm" data-st="aprovada" data-id="' + esc(m.id) + '">Aprovar</button>' +
             '<button class="btn btn-danger btn-sm" data-st="rejeitada" data-id="' + esc(m.id) + '">Rejeitar</button>'
           : '') +
+        '<button class="btn btn-danger btn-sm" data-del="' + esc(m.id) + '" title="Excluir definitivamente">' +
+          '<svg viewBox="0 0 24 24"><path d="M9 3h6l1 2h4v2H4V5h4l1-2ZM6 9h12l-1 12H7L6 9Zm3 2v8h2v-8H9Zm4 0v8h2v-8h-2Z"/></svg>' +
+        '</button>' +
       '</div></td>';
     tb.appendChild(tr);
   });
@@ -288,9 +313,41 @@ $('#tbody').addEventListener('click', async e => {
   const ver = e.target.closest('[data-ver]');
   if (ver) { abrirDetalhe(ver.dataset.ver); return; }
 
+  const del = e.target.closest('[data-del]');
+  if (del) { await excluirMatricula(del.dataset.del); return; }
+
   const st = e.target.closest('[data-st]');
   if (st) { await mudarStatus(st.dataset.id, st.dataset.st); }
 });
+
+/* Exclusão definitiva: apaga o registro E os documentos guardados.
+   Sem isso, os arquivos ficariam órfãos ocupando espaço para sempre. */
+async function excluirMatricula(id) {
+  const m = LISTA.find(x => x.id === id);
+  if (!m) return;
+
+  const ok = confirm(
+    'Excluir definitivamente esta matrícula?\n\n' +
+    'Aluno: ' + m.nome + '\n' +
+    'Protocolo: ' + m.protocolo + '\n\n' +
+    'Os documentos enviados também serão apagados.\n' +
+    'Esta ação não pode ser desfeita.'
+  );
+  if (!ok) return;
+
+  const arquivos = [m.doc_identidade, m.comprovante_pix].filter(Boolean);
+  if (arquivos.length) {
+    await db.storage.from('documentos').remove(arquivos);
+  }
+
+  const { error } = await db.from('matriculas').delete().eq('id', id);
+  if (error) { toast('Erro ao excluir: ' + error.message, 'err'); return; }
+
+  LISTA = LISTA.filter(x => x.id !== id);
+  atualizarStats();
+  desenhar();
+  toast('Matrícula excluída.', 'ok');
+}
 
 async function mudarStatus(id, status) {
   const { error } = await db.from('matriculas').update({ status: status }).eq('id', id);
@@ -390,12 +447,9 @@ async function abrirDetalhe(id) {
     }));
 
   $('#mDel').addEventListener('click', async () => {
-    if (!confirm('Excluir definitivamente a matrícula ' + m.protocolo + '?\nEsta ação não pode ser desfeita.')) return;
-    const { error } = await db.from('matriculas').delete().eq('id', m.id);
-    if (error) { toast('Erro ao excluir.', 'err'); return; }
-    LISTA = LISTA.filter(x => x.id !== m.id);
-    atualizarStats(); desenhar(); fechar();
-    toast('Matrícula excluída.', 'ok');
+    const antes = LISTA.length;
+    await excluirMatricula(m.id);
+    if (LISTA.length < antes) fechar();
   });
 }
 
